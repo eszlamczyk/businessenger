@@ -8,7 +8,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SOURCE="${TYPE%%:*}"
 LANGUAGE="${TYPE##*:}"
 
-CONTEXT_FILE="$(realpath "$SCRIPT_DIR/../context/${SOURCE}_${LANGUAGE}_examples.txt")"
+CONTEXT_FILE="$(realpath "$SCRIPT_DIR/../context/polish/${SOURCE}_${LANGUAGE}_examples.txt")"
 
 CONTEXT=$(cat "$CONTEXT_FILE")
 
