@@ -10,7 +10,22 @@ case $COMMAND in
   polish)
     bash "$SCRIPT_DIR/skill-tools/polish.sh" "$2" "$3"
     ;;
+  wtf)
+    bash "$SCRIPT_DIR/skill-tools/wtf.sh" "$2"
+    ;;
+  tasks)
+    bash "$SCRIPT_DIR/skill-tools/tasks.sh" "$2"
+    ;;
+  tldr)
+    bash "$SCRIPT_DIR/skill-tools/tldr.sh" "$2"
+    ;;
+  diplomat)
+    bash "$SCRIPT_DIR/skill-tools/diplomat.sh" "$2" "$3"
+    ;;
+  docgen)
+    bash "$SCRIPT_DIR/skill-tools/docgen.sh" "$2"
+    ;;
   *)
-    echo "Unknown command. Available commands: standup, polish"
+    echo "Unknown command. Available commands: standup, polish, wtf, tasks, tldr, diplomat, docgen"
     ;;
 esac
