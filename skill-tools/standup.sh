@@ -5,7 +5,10 @@ LOG_SINCE="midnight"
 # -p shows the diff.
 # -U1 shows only 1 line of context around changes to keep it short.
 # The ":(exclude)" syntax prevents huge auto-generated files from flooding the prompt.
-GIT_INFO=$(git log --author="$(git config user.name)" \
+GIT_INFO=$(git log 
+  --all \
+  --no-merges \
+  --author="$(git config user.name)" \
   --since="$LOG_SINCE" \
   --stat \
   -p \
