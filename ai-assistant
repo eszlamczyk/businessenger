@@ -1,0 +1,16 @@
+#!/bin/bash
+
+SCRIPT_DIR=$(dirname "$(realpath "$0")")
+COMMAND=$1
+
+case $COMMAND in
+  standup)
+    bash "$SCRIPT_DIR/skill-tools/standup.sh"
+    ;;
+  polish)
+    bash "$SCRIPT_DIR/skill-tools/polish.sh" "$2" "$3"
+    ;;
+  *)
+    echo "Unknown command. Available commands: standup, polish"
+    ;;
+esac
