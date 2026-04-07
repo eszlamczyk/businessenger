@@ -2,12 +2,14 @@
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-if [ -z "$1" ]; then
-  echo "Usage: ai-assistant tasks <notes_file>"
+if [[ "$1" == "--file" ]]; then
+  NOTES=$(cat "$2")
+elif [ -n "$1" ]; then
+  NOTES="$1"
+else
+  echo "Usage: ai-assistant tasks \"<notes>\"  OR  ai-assistant tasks --file <notes_file>"
   exit 1
 fi
-
-NOTES=$(cat "$1")
 
 CONTEXT_FILE="$(realpath "$SCRIPT_DIR/../context/tasks/default_examples.txt")"
 

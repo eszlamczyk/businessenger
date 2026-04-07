@@ -1,7 +1,11 @@
 #!/bin/bash
 
 TYPE=$1
-DRAFT=$2
+if [[ "$2" == "--file" ]]; then
+  DRAFT=$(cat "$3")
+else
+  DRAFT=$2
+fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
