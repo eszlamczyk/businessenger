@@ -8,24 +8,47 @@ case $COMMAND in
     bash "$SCRIPT_DIR/skill-tools/standup.sh"
     ;;
   polish)
-    bash "$SCRIPT_DIR/skill-tools/polish.sh" "$2" "$3"
+    bash "$SCRIPT_DIR/skill-tools/polish.sh" "$2" "$3" "$4"
     ;;
   wtf)
-    bash "$SCRIPT_DIR/skill-tools/wtf.sh" "$2"
+    bash "$SCRIPT_DIR/skill-tools/wtf.sh" "$2" "$3"
     ;;
   tasks)
-    bash "$SCRIPT_DIR/skill-tools/tasks.sh" "$2"
+    bash "$SCRIPT_DIR/skill-tools/tasks.sh" "$2" "$3"
     ;;
   tldr)
-    bash "$SCRIPT_DIR/skill-tools/tldr.sh" "$2"
+    bash "$SCRIPT_DIR/skill-tools/tldr.sh" "$2" "$3"
     ;;
   diplomat)
-    bash "$SCRIPT_DIR/skill-tools/diplomat.sh" "$2" "$3"
+    bash "$SCRIPT_DIR/skill-tools/diplomat.sh" "$2" "$3" "$4"
     ;;
   docgen)
-    bash "$SCRIPT_DIR/skill-tools/docgen.sh" "$2"
+    bash "$SCRIPT_DIR/skill-tools/docgen.sh" "$2" "$3"
+    ;;
+  --help|-h|help)
+    echo "Usage: ai-assistant <command> [options]"
+    echo ""
+    echo "Commands:"
+    echo "  standup                        Generate a standup summary from recent git activity"
+    echo "  polish <type> \"<draft>\"         Polish prose using a style type"
+    echo "  polish <type> --file <file>    Polish prose read from a file"
+    echo "  wtf \"<error>\"                  Explain an error message"
+    echo "  wtf --file <file>              Explain an error read from a file"
+    echo "  tasks \"<notes>\"                Extract tasks from meeting notes"
+    echo "  tasks --file <file>            Extract tasks from a notes file"
+    echo "  tldr \"<thread>\"                Summarize a communication thread"
+    echo "  tldr --file <file>             Summarize a thread read from a file"
+    echo "  diplomat <type> \"<draft>\"       Rewrite a message more diplomatically"
+    echo "  diplomat <type> --file <file>  Rewrite a message read from a file"
+    echo "  docgen \"<code>\"                Generate documentation for source code"
+    echo "  docgen --file <file>           Generate documentation for a source file"
+    echo ""
+    echo "Options:"
+    echo "  -h, --help                     Show this help message"
     ;;
   *)
-    echo "Unknown command. Available commands: standup, polish, wtf, tasks, tldr, diplomat, docgen"
+    echo "Unknown command: $COMMAND"
+    echo "Run 'ai-assistant --help' for usage."
+    exit 1
     ;;
 esac

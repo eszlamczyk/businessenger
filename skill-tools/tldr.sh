@@ -2,15 +2,15 @@
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-if [ -t 0 ] && [ -z "$1" ]; then
-  echo "Usage: ai-assistant tldr <thread_file>  OR  cat thread.txt | ai-assistant tldr"
-  exit 1
-fi
-
-if [ -n "$1" ]; then
-  THREAD=$(cat "$1")
-else
+if [[ "$1" == "--file" ]]; then
+  THREAD=$(cat "$2")
+elif [ -n "$1" ]; then
+  THREAD="$1"
+elif [ ! -t 0 ]; then
   THREAD=$(cat)
+else
+  echo "Usage: ai-assistant tldr \"<thread>\"  OR  ai-assistant tldr --file <thread_file>  OR  cat thread.txt | ai-assistant tldr"
+  exit 1
 fi
 
 CONTEXT_FILE="$(realpath "$SCRIPT_DIR/../context/tldr/default_examples.txt")"

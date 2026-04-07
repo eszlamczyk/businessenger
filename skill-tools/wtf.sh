@@ -1,14 +1,14 @@
 #!/bin/bash
 
-if [ -t 0 ] && [ -z "$1" ]; then
-  echo "Usage: ai-assistant wtf <error_file>  OR  cat error.log | ai-assistant wtf"
-  exit 1
-fi
-
-if [ -n "$1" ]; then
-  ERROR_INPUT=$(cat "$1")
-else
+if [[ "$1" == "--file" ]]; then
+  ERROR_INPUT=$(cat "$2")
+elif [ -n "$1" ]; then
+  ERROR_INPUT="$1"
+elif [ ! -t 0 ]; then
   ERROR_INPUT=$(cat)
+else
+  echo "Usage: ai-assistant wtf \"<error>\"  OR  ai-assistant wtf --file <error_file>  OR  cat error.log | ai-assistant wtf"
+  exit 1
 fi
 
 cat <<EOF | claude

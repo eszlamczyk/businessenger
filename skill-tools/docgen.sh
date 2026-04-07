@@ -2,15 +2,15 @@
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-if [ -t 0 ] && [ -z "$1" ]; then
-  echo "Usage: ai-assistant docgen <source_file>  OR  cat script.py | ai-assistant docgen"
-  exit 1
-fi
-
-if [ -n "$1" ]; then
-  SOURCE=$(cat "$1")
-else
+if [[ "$1" == "--file" ]]; then
+  SOURCE=$(cat "$2")
+elif [ -n "$1" ]; then
+  SOURCE="$1"
+elif [ ! -t 0 ]; then
   SOURCE=$(cat)
+else
+  echo "Usage: ai-assistant docgen \"<code>\"  OR  ai-assistant docgen --file <source_file>  OR  cat script.py | ai-assistant docgen"
+  exit 1
 fi
 
 CONTEXT_FILE="$(realpath "$SCRIPT_DIR/../context/docgen/default_examples.txt")"
