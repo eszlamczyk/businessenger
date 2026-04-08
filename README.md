@@ -73,6 +73,8 @@ cat thread.txt | ai-assistant tldr
 
 Tells you the context, the core disagreement or hold-up, and what (if anything) you need to do.
 
+**Slack mode** — fetch and summarise directly from a Slack channel via the TUI (see below). No copy-paste required; the Slack MCP retrieves the messages for you.
+
 ### `diplomat <type:language> "<draft>"`
 
 Rewrites an angry or blunt draft as a professional, diplomatic message.
@@ -108,21 +110,69 @@ context/
   docgen/default_examples.txt              # optional
 ```
 
+## TUI
+
+```bash
+ai-assistant          # launches the interactive TUI
+```
+
+A terminal UI for all commands. Navigate with `↑/↓`, confirm with `enter`, go back with `ctrl+b`.
+
+Most tools offer two input modes — **write** (type/paste) and **file** (browse the filesystem). `tldr` also offers a **slack** mode when Slack workspaces are configured (see below).
+
+### Slack mode for `tldr`
+
+#### 1. Create a Slack app and get a token
+
+1. Go to [api.slack.com/apps](https://api.slack.com/apps) → **Create New App** → **From scratch**.
+2. Name it (e.g. "businessenger"), select your workspace, click **Create App**.
+3. In the left sidebar go to **OAuth & Permissions** → scroll to **Scopes** → **User Token Scopes** and add:
+   - `channels:read` — list public channels
+   - `groups:read` — list private channels you're a member of
+4. Scroll back to the top of **OAuth & Permissions** and click **Install to Workspace** → **Allow**.
+5. Copy the **User OAuth Token** (`xoxp-...`).
+
+#### 2. Add the token to config.json
+
+```json
+{
+  "slack": {
+    "workspaces": [
+      { "name": "My Team", "token": "xoxp-..." }
+    ]
+  }
+}
+```
+
+Add one entry per workspace. The token is only used locally to fetch channel names.
+
+#### 3. Use it
+
+1. Launch the TUI (`ai-assistant`), select `tldr`, choose **slack** as the input mode.
+2. Pick a workspace → channels are fetched live from the Slack API.
+3. Pick a channel and a "since" date (relative options or custom text).
+4. The Slack MCP retrieves the messages and Claude produces the summary.
+
+> If your `claude` install doesn't auto-discover the Slack MCP, add `--mcp-config <path-to-slack-mcp.json>` to the `claude` call in `skill-tools/tldr.sh`.
+
 ## Prerequisites
 
 - [`claude`](https://claude.ai/code) CLI available in your `PATH`
+- Slack MCP configured (only required for `tldr` Slack mode)
 
 ## Project Structure
 
 ```
 install.sh            # Installs the CLI to ~/.local/bin
 ai-assistant          # Entry point
+config.json           # Channel/language/Slack workspace config
+tui/                  # Interactive terminal UI (Go)
 skill-tools/
   standup.sh          # Standup generation
   polish.sh           # Message polishing
   wtf.sh              # Error explanation
   tasks.sh            # Task extraction from meeting notes
-  tldr.sh             # Thread summarisation
+  tldr.sh             # Thread summarisation (+ Slack MCP mode)
   diplomat.sh         # Diplomatic rewrite
   docgen.sh           # README generation
 context/              # Your personal style examples (gitignored)
