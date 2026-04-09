@@ -6,7 +6,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"runtime"
 	"sort"
 	"strings"
 
@@ -667,13 +666,7 @@ func buildCmd(m model) *exec.Cmd {
 func scriptDir() string {
 	exe, _ := os.Executable()
 	exe, _ = filepath.EvalSymlinks(exe)
-	dir := filepath.Dir(exe)
-
-	_, filename, _, ok := runtime.Caller(0)
-	if ok {
-		dir = filepath.Dir(filepath.Dir(filename)) // tui/ → project root
-	}
-	return dir
+	return filepath.Dir(exe)
 }
 
 // ── Main ──────────────────────────────────────────────────────────────────────

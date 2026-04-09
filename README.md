@@ -178,13 +178,15 @@ Add the token to the `slack.workspaces` array in your `config.json` (see [Config
 ## Prerequisites
 
 - [`claude`](https://claude.ai/code) CLI available in your `PATH`
+- [Go](https://go.dev/dl/) — required at install time to compile the TUI; not needed afterwards
 - Slack MCP configured (only required for `tldr` Slack mode)
 
 ## Project Structure
 
 ```
-install.sh              # Installs the CLI to ~/.local/bin
-ai-assistant            # Entry point
+install.sh              # Installs the CLI to ~/.local/bin (compiles TUI binary)
+ai-assistant            # Entry point (runs TUI when called with no arguments)
+ai-assistant-tui        # Compiled TUI binary — built by install.sh (gitignored)
 config.json.example     # Config template — copy to config.json and fill in credentials
 config.json             # Your config (gitignored — never committed)
 tui/
