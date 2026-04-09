@@ -1,4 +1,4 @@
 # Ignore context files, for privacy reasons, user must do them himself
 
 ./context/*
-
+config.json

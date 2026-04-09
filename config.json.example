@@ -1,0 +1,9 @@
+{
+  "channels": ["slack", "email"],
+  "languages": ["english", "polish"],
+  "slack": {
+    "workspaces": [
+      { "name": "Test", "token": "xoxp-..."}
+    ]
+  }
+}

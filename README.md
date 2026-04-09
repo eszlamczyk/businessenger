@@ -10,6 +10,36 @@ bash install.sh
 
 Symlinks `ai-assistant` into `~/.local/bin`. If that directory isn't in your `PATH`, the script will tell you what to add to your shell config. Also creates all required `context/` directories and empty placeholder files so commands work out of the box.
 
+## Configuration
+
+Create `config.json`
+
+```bash
+cp config.json.example config.json
+```
+
+Then edit `config.json`:
+
+```json
+{
+  "channels": ["slack", "email"],
+  "languages": ["english", "polish"],
+  "slack": {
+    "workspaces": [
+      { "name": "My Team", "token": "xoxp-..." }
+    ]
+  }
+}
+```
+
+| Field | Description |
+|---|---|
+| `channels` | Options shown when selecting a channel (for `polish`, `diplomat`) |
+| `languages` | Options shown when selecting a language |
+| `slack.workspaces` | Workspaces available in `tldr` Slack mode — add one entry per workspace |
+
+The `slack.workspaces` section is only required if you want the `tldr` Slack mode. See [Slack mode for `tldr`](#slack-mode-for-tldr) for how to get a token.
+
 ## Usage
 
 ```bash
@@ -73,6 +103,8 @@ cat thread.txt | ai-assistant tldr
 
 Tells you the context, the core disagreement or hold-up, and what (if anything) you need to do.
 
+**Slack mode** — fetch and summarise directly from a Slack channel via the TUI (see below). No copy-paste required; the Slack MCP retrieves the messages for you.
+
 ### `diplomat <type:language> "<draft>"`
 
 Rewrites an angry or blunt draft as a professional, diplomatic message.
@@ -108,24 +140,65 @@ context/
   docgen/default_examples.txt              # optional
 ```
 
+## TUI
+
+```bash
+ai-assistant          # launches the interactive TUI
+```
+
+A terminal UI for all commands. Navigate with `↑/↓`, confirm with `enter`, go back with `ctrl+b`.
+
+Most tools offer two input modes — **write** (type/paste) and **file** (browse the filesystem). `tldr` also offers a **slack** mode when Slack workspaces are configured (see below).
+
+### Slack mode for `tldr`
+
+#### 1. Create a Slack app and get a token
+
+1. Go to [api.slack.com/apps](https://api.slack.com/apps) → **Create New App** → **From scratch**.
+2. Name it (e.g. "businessenger"), select your workspace, click **Create App**.
+3. In the left sidebar go to **OAuth & Permissions** → scroll to **Scopes** → **User Token Scopes** and add:
+   - `channels:read` — list public channels
+   - `groups:read` — list private channels you're a member of
+4. Scroll back to the top of **OAuth & Permissions** and click **Install to Workspace** → **Allow**.
+5. Copy the **User OAuth Token** (`xoxp-...`).
+
+#### 2. Add the token to config.json
+
+Add the token to the `slack.workspaces` array in your `config.json` (see [Configuration](#configuration)). Add one entry per workspace — the token is only used locally to fetch channel names.
+
+#### 3. Use it
+
+1. Launch the TUI (`ai-assistant`), select `tldr`, choose **slack** as the input mode.
+2. Pick a workspace → channels are fetched live from the Slack API.
+3. Pick a channel and a "since" date (relative options or custom text).
+4. The Slack MCP retrieves the messages and Claude produces the summary.
+
+> If your `claude` install doesn't auto-discover the Slack MCP, add `--mcp-config <path-to-slack-mcp.json>` to the `claude` call in `skill-tools/tldr.sh`.
+
 ## Prerequisites
 
 - [`claude`](https://claude.ai/code) CLI available in your `PATH`
+- Slack MCP configured (only required for `tldr` Slack mode)
 
 ## Project Structure
 
 ```
-install.sh            # Installs the CLI to ~/.local/bin
-ai-assistant          # Entry point
+install.sh              # Installs the CLI to ~/.local/bin
+ai-assistant            # Entry point
+config.json.example     # Config template — copy to config.json and fill in credentials
+config.json             # Your config (gitignored — never committed)
+tui/
+  main.go               # Interactive terminal UI (Go)
+  slack.go              # Slack workspace/channel picker and API client
 skill-tools/
-  standup.sh          # Standup generation
-  polish.sh           # Message polishing
-  wtf.sh              # Error explanation
-  tasks.sh            # Task extraction from meeting notes
-  tldr.sh             # Thread summarisation
-  diplomat.sh         # Diplomatic rewrite
-  docgen.sh           # README generation
-context/              # Your personal style examples (gitignored)
+  standup.sh            # Standup generation
+  polish.sh             # Message polishing
+  wtf.sh                # Error explanation
+  tasks.sh              # Task extraction from meeting notes
+  tldr.sh               # Thread summarisation (+ Slack MCP mode)
+  diplomat.sh           # Diplomatic rewrite
+  docgen.sh             # README generation
+context/                # Your personal style examples (gitignored)
 ```
 
 ## License
