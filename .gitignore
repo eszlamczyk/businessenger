@@ -1,4 +1,8 @@
 # Ignore context files, for privacy reasons, user must do them himself
-
 ./context/*
+
+# Compiled TUI binary (platform-specific, built by install.sh)
+ai-assistant-tui
+
+# Credentials
 config.json

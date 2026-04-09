@@ -5,6 +5,17 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TARGET="$HOME/.local/bin/ai-assistant"
 
+# Build TUI binary (requires Go)
+if ! command -v go &> /dev/null; then
+  echo "Error: Go is required to build the TUI."
+  echo "Install it from https://go.dev/dl/ then re-run this script."
+  exit 1
+fi
+
+echo "Building TUI..."
+(cd "$SCRIPT_DIR" && go build -o "$SCRIPT_DIR/ai-assistant-tui" ./tui/)
+echo "Built: ai-assistant-tui"
+
 mkdir -p "$HOME/.local/bin"
 
 ln -sf "$SCRIPT_DIR/ai-assistant" "$TARGET"

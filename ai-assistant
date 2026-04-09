@@ -46,6 +46,9 @@ case $COMMAND in
     echo "Options:"
     echo "  -h, --help                     Show this help message"
     ;;
+  "")
+    exec "$SCRIPT_DIR/ai-assistant-tui"
+    ;;
   *)
     echo "Unknown command: $COMMAND"
     echo "Run 'ai-assistant --help' for usage."
