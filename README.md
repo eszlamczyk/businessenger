@@ -203,6 +203,3 @@ skill-tools/
 context/                # Your personal style examples (gitignored)
 ```
 
-## License
-
-MIT
