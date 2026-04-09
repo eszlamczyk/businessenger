@@ -10,6 +10,36 @@ bash install.sh
 
 Symlinks `ai-assistant` into `~/.local/bin`. If that directory isn't in your `PATH`, the script will tell you what to add to your shell config. Also creates all required `context/` directories and empty placeholder files so commands work out of the box.
 
+## Configuration
+
+Create `config.json`
+
+```bash
+cp config.json.example config.json
+```
+
+Then edit `config.json`:
+
+```json
+{
+  "channels": ["slack", "email"],
+  "languages": ["english", "polish"],
+  "slack": {
+    "workspaces": [
+      { "name": "My Team", "token": "xoxp-..." }
+    ]
+  }
+}
+```
+
+| Field | Description |
+|---|---|
+| `channels` | Options shown when selecting a channel (for `polish`, `diplomat`) |
+| `languages` | Options shown when selecting a language |
+| `slack.workspaces` | Workspaces available in `tldr` Slack mode — add one entry per workspace |
+
+The `slack.workspaces` section is only required if you want the `tldr` Slack mode. See [Slack mode for `tldr`](#slack-mode-for-tldr) for how to get a token.
+
 ## Usage
 
 ```bash
@@ -134,17 +164,7 @@ Most tools offer two input modes — **write** (type/paste) and **file** (browse
 
 #### 2. Add the token to config.json
 
-```json
-{
-  "slack": {
-    "workspaces": [
-      { "name": "My Team", "token": "xoxp-..." }
-    ]
-  }
-}
-```
-
-Add one entry per workspace. The token is only used locally to fetch channel names.
+Add the token to the `slack.workspaces` array in your `config.json` (see [Configuration](#configuration)). Add one entry per workspace — the token is only used locally to fetch channel names.
 
 #### 3. Use it
 
@@ -163,19 +183,22 @@ Add one entry per workspace. The token is only used locally to fetch channel nam
 ## Project Structure
 
 ```
-install.sh            # Installs the CLI to ~/.local/bin
-ai-assistant          # Entry point
-config.json           # Channel/language/Slack workspace config
-tui/                  # Interactive terminal UI (Go)
+install.sh              # Installs the CLI to ~/.local/bin
+ai-assistant            # Entry point
+config.json.example     # Config template — copy to config.json and fill in credentials
+config.json             # Your config (gitignored — never committed)
+tui/
+  main.go               # Interactive terminal UI (Go)
+  slack.go              # Slack workspace/channel picker and API client
 skill-tools/
-  standup.sh          # Standup generation
-  polish.sh           # Message polishing
-  wtf.sh              # Error explanation
-  tasks.sh            # Task extraction from meeting notes
-  tldr.sh             # Thread summarisation (+ Slack MCP mode)
-  diplomat.sh         # Diplomatic rewrite
-  docgen.sh           # README generation
-context/              # Your personal style examples (gitignored)
+  standup.sh            # Standup generation
+  polish.sh             # Message polishing
+  wtf.sh                # Error explanation
+  tasks.sh              # Task extraction from meeting notes
+  tldr.sh               # Thread summarisation (+ Slack MCP mode)
+  diplomat.sh           # Diplomatic rewrite
+  docgen.sh             # README generation
+context/                # Your personal style examples (gitignored)
 ```
 
 ## License
